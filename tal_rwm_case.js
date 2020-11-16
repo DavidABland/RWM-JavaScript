@@ -23,10 +23,22 @@ function isInWarranty(context) {
 
     if (formType === FORM_TYPE_CREATE || formType === FORM_TYPE_UPDATE) {
 
+        var CompareDateVal = new Date();
+
         var CreatedOn = formContext.getAttribute("createdon");
+        var DateLogged = formContext.getAttribute("msa_date");
 
-        alert(CreatedOn.getvalue());
+        var CreatedOnVal = CreatedOn.getValue();
+        var DateLoggedVal = DateLogged.getValue();
 
+        if (DateLoggedVal !== null) {
+            CompareDateVal = DateLoggedVal; // If available use Date Logged
+        }
+        else if (CreatedOnVal !== null) {
+            CompareDateVal = CreatedOnVal; // else use the Created On Date - Note that createdon is null (new record) then we use the value from when CompareDateVal was declared i.e. Now
+        }
+
+        CompareDateVal.setHours(0, 0, 0, 0);
 
         if (lookupObject !== null) {
             var lookUpObjectValue = lookupObject.getValue();
@@ -46,25 +58,31 @@ function isInWarranty(context) {
 
                 try {
 
-                    var nowDate = new Date();
                     var startDate = new Date(result.msa_startdate);
                     var endDate = new Date(result.msa_enddate);
 
-                    nowDate.setHours(0, 0, 0, 0);
                     startDate.setHours(0, 0, 0, 0);
                     endDate.setHours(0, 0, 0, 0);
 
-                    if (nowDate >= startDate && nowDate <= endDate) {
-                        //alert("In Warranty");
-                        WarrantyStatus.setValue(true);
+                    //alert(startDate);
+                    //alert(CompareDateVal);
+
+                    var CurrentStatus = WarrantyStatus.getValue();
+                    //alert(WarrantyStatus);
+
+                    if (CompareDateVal >= startDate && CompareDateVal <= endDate) {
+                        if (CurrentStatus === false || CurrentStatus === null) {
+                            //alert("In Warranty");
+                            WarrantyStatus.setValue(true);
+                        }
                     }
-                    else {
+                    else if (CurrentStatus === true || CurrentStatus === null){
                         //alert("Out of Warranty");
                         WarrantyStatus.setValue(false);
                     }
                 }
                 catch (err) {
-                    Xrm.Utility.alertDialog("An error occured. Function - isInWarranty.\n\nError Details:\n\n" + err);
+                    Xrm.Navigation.openAlertDialog("An error occured. Function - isInWarranty.\n\nError Details:\n\n" + err);
                     return;
                 }
 

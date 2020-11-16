@@ -103,7 +103,7 @@ function LoadDefaults(context) {
             }
         }
         catch (err) {
-            Xrm.Utility.alertDialog("An error occured. Function - LoadDefaults.\n\nError Details:\n\n" + err);
+            Xrm.Navigation.openAlertDialog("An error occured. Function - LoadDefaults.\n\nError Details:\n\n" + err);
         }
     },
         function (error) {
