@@ -93,3 +93,86 @@ function isInWarranty(context) {
             });
     }
 }	
+
+
+// JavaScript source code
+
+
+function GetCustomer(context, fromEvent) {
+
+    'use strict';
+
+    //alert(fromEvent);
+
+    var formContext = context.getFormContext(); // get formContext
+    var formType = formContext.ui.getFormType();
+
+    var FORM_TYPE_CREATE = 1;
+    var FORM_TYPE_UPDATE = 2;
+
+    var customerBlank = false;
+
+    // Only run code on creation of the form or Update
+
+    var customerField = formContext.getAttribute("customerid");
+    var customerValue = customerField.getValue();
+
+    if (customerValue === null) {
+        customerBlank = true; // No Customer exists
+    }
+
+    if (formType === FORM_TYPE_CREATE || formType === FORM_TYPE_UPDATE) {
+        if ((customerBlank && fromEvent === "onLoad") || fromEvent == "onChange") {
+
+            // See if Customer Machine has a Value
+            var lookupObject = formContext.getAttribute("splash_custmachineid");
+
+            if (lookupObject !== null) {
+                var lookUpObjectValue = lookupObject.getValue();
+                if ((lookUpObjectValue !== null)) {
+                    var lookupid = lookUpObjectValue[0].id;
+                }
+                else {
+                    return;
+                }
+            }
+            else {
+                return;
+            }
+
+            Xrm.WebApi.retrieveRecord("msa_customermachine", lookupid, "?$select=_msa_accountid_value").then(function success(result) {
+
+                try {
+                    var lookupValue = new Array();
+
+                    // Create Customer Lookup
+
+                    var Customer = result._msa_accountid_value;
+
+                    if (Customer !== null) {
+                        //alert("GUID: " + result._lss_school_value);
+                        //alert("Logical Name: " + result['_lss_school_value@Microsoft.Dynamics.CRM.lookuplogicalname']);
+                        //alert("Text: " + result['_lss_school_value@OData.Community.Display.V1.FormattedValue']);
+
+                        lookupValue[0] = new Object();
+                        lookupValue[0].id = result._msa_accountid_value;
+                        lookupValue[0].name = result['_msa_accountid_value@OData.Community.Display.V1.FormattedValue'];
+                        lookupValue[0].entityType = result['_msa_accountid_value@Microsoft.Dynamics.CRM.lookuplogicalname'];
+
+                        customerField.setValue(lookupValue);
+
+                    }
+                }
+                catch (err) {
+                    Xrm.Navigation.openAlertDialog("An error occured. Function - getCustomer.\n\nError Details:\n\n" + err);
+                    return;
+                }
+            },
+                function (error) {
+                    Xrm.Navigation.openAlertDialog("An error occured. Function - getCustomer.\n\nError Details:\n\n" + error.message);
+                    // handle error conditions
+                });
+        }
+    }
+}
+
