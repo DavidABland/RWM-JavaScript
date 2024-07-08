@@ -8,6 +8,19 @@ function isInWarranty(context) {
     var lookupObject = formContext.getAttribute("splash_custmachineid");
     var WarrantyStatus = formContext.getAttribute("msa_machineinwarranty");
 
+
+    // Check if Installation Case and if it is don't calculate Warranty Status
+
+    var caseType = formContext.getAttribute("msa_typeofcase");
+    var installationValue = 805430001;
+
+    if (caseType !== null && caseType !== undefined) {
+        var caseTypeValue = caseType.getValue();
+        if (caseTypeValue === installationValue) {
+            return;
+        }
+    }
+
     if (WarrantyStatus === null) {
         return;
     }
