@@ -15,6 +15,8 @@ function ShowHideonBalerChange(context) {
         formContext.getControl("tal_saletype").setVisible(false);
         formContext.getControl("tal_warrantyperiod").setVisible(false);
         formContext.getControl("tal_newexistingmachine").setVisible(false);
+        formContext.getControl("tal_sitecontact").setVisible(false);
+
         formContext.getAttribute("tal_saletype").setRequiredLevel("none");
         formContext.getAttribute("tal_warrantyperiod").setRequiredLevel("none");
         formContext.getAttribute("tal_newexistingmachine").setRequiredLevel("none");
@@ -30,6 +32,8 @@ function ShowHideonBalerChange(context) {
                 formContext.getControl("tal_saletype").setVisible(true);
                 formContext.getControl("tal_warrantyperiod").setVisible(true);
                 formContext.getControl("tal_newexistingmachine").setVisible(true);
+                formContext.getControl("tal_sitecontact").setVisible(true);
+
                 formContext.getAttribute("tal_saletype").setRequiredLevel("required");
                 formContext.getAttribute("tal_warrantyperiod").setRequiredLevel("required");
                 formContext.getAttribute("tal_newexistingmachine").setRequiredLevel("required");
@@ -38,6 +42,8 @@ function ShowHideonBalerChange(context) {
                 formContext.getControl("tal_saletype").setVisible(false);
                 formContext.getControl("tal_warrantyperiod").setVisible(false);
                 formContext.getControl("tal_newexistingmachine").setVisible(false);
+                formContext.getControl("tal_sitecontact").setVisible(false);
+
                 formContext.getAttribute("tal_saletype").setRequiredLevel("none");
                 formContext.getAttribute("tal_warrantyperiod").setRequiredLevel("none");
                 formContext.getAttribute("tal_newexistingmachine").setRequiredLevel("none");
